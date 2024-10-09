@@ -15,7 +15,6 @@ const orderController = {
     const {  customerName, productName, price, quantity, location } = req.body;
 
     const orderId = await orderController.getNextOrderId();
-console.log(orderId,"id");
 
     const order = new Order({
       orderId, 
@@ -24,8 +23,6 @@ console.log(orderId,"id");
       price,
       quantity,
       location,
-      
-      
     });
 
     await order.save();
@@ -47,14 +44,13 @@ getOrders: async(req,res)=>{
 
 editOrder: async (req, res) => {
   try {
-    const { orderId } = req.params; // Get orderId from the request parameters
+    const { orderId } = req.params; 
     const { customerName, productName, price, quantity, location,status } = req.body;
 
-    // Find the order by ID and update it
     const updatedOrder = await Order.findOneAndUpdate(
       { _id: orderId },
       { customerName, product: productName, price, quantity, location ,status},
-      { new: true, runValidators: true } // Return the updated document and run validators
+      { new: true, runValidators: true } 
     );
 
     if (!updatedOrder) {
@@ -67,15 +63,15 @@ editOrder: async (req, res) => {
     return res.status(500).json({ message: 'Failed to update order', error });
   }
 },
+
 deleteOrder: async (req, res) => {
   try {
     const { orderId } = req.params; 
-    console.log(orderId,"id/.....");
-    // Get orderId from the request parameters
+    
     if (!orderId) {
       return res.status(400).json({ message: 'Order ID is required' });
     }
-    // Find the order by ID and remove it
+    
     const deletedOrder = await Order.findByIdAndDelete(orderId);
 
     if (!deletedOrder) {
